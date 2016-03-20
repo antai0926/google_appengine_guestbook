@@ -11,6 +11,9 @@ handlers:
 - url: /stylesheets
   static_dir: stylesheets
 
+- url: /third_party
+  static_dir: third_party
+
 - url: /.*
   script: main.app
 

@@ -1,45 +1,52 @@
 <!DOCTYPE html>
 {% autoescape true %}
 <html>
-  <!-- [START head_html] -->
-  <head>
-    <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
-    <!--<script src="/third_party/jquery/jquery-2.2.2.min.js"></script>-->
-  </head>
-  <!-- [END head_html] -->
-  <body>
-    {% for greeting in greetings %}
-      {% if greeting.author %}
-        <b>{{ greeting.author.email }}
-          {% if user and user.user_id() == greeting.author.identity %}
-            (You)
-          {% endif %}
-        </b> wrote:
-      {% else %}
-       An anonymous person wrote:
-      {% endif %}
-      <blockquote>{{ greeting.content }}</blockquote>
-    {% endfor %}
+    <!-- [START head_html] -->
+    <head>
+    <!--<link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />-->
+    <link href="/third_party/bootstrapt3/css/bootstrap.min.css" rel="stylesheet">
+    </head>
+    <!-- [END head_html] -->
+    <body>
+        <div class="alert alert-success" role="alert">熊熊豬豬留言板</div>
+        {% for greeting in greetings %}
+            {% if greeting.author %}
+                <b>
+                {% if user and user.user_id() == greeting.author.identity %}
+                    <div class="alert alert-danger" role="alert">
+                        <b>{{ greeting.author.email }}(You)</b>
+                         <br/>wrote: {{ greeting.content }}
+                    </div>
+                {% else %}
+                    <div class="alert alert-info" role="alert">
+                        <b>{{ greeting.author.email }}</b>
+                         <br/>wrote: {{ greeting.content }}
+                    </div>
+                {% endif %}
+            {% else %}
+                 <div class="alert alert-info" role="alert">
+                     <b>An anonymous person</b>
+                     <br/>wrote: {{ greeting.content }}
+                 </div>
+            {% endif %}
+        {% endfor %}
 
-    <form action="/sign?guestbook_name={{ guestbook_name }}" method="post">
-      <div><textarea name="content" rows="3" cols="60"></textarea></div>
-      <div><input type="submit" value="Sign Guestbook"></div>
-    </form>
+        <form action="/sign?guestbook_name={{ guestbook_name }}" method="post">
+            <div><textarea name="content" rows="3" cols="60"></textarea></div>
+            <div><input type="submit" value="Sign Guestbook"></div>
+        </form>
 
-    <hr>
+        <hr>
 
-    <form>Guestbook name:
-      <input value="{{ guestbook_name }}" name="guestbook_name">
-      <input type="submit" value="switch">
-    </form>
+        <form>Guestbook name:
+            <input value="{{ guestbook_name }}" name="guestbook_name">
+            <input type="submit" value="switch">
+        </form>
 
-    <a href="{{ url|safe }}">{{ url_linktext }}</a>
-    <!--
-    <div id="divtest" value="s"></div>
-    <script>
-      alert($('#divtest').value());
-    </script>-->
+        <a href="{{ url|safe }}">{{ url_linktext }}</a>
 
-  </body>
+        <script src="/third_party/jquery/jquery-2.2.2.min.js"></script>
+        <script src="/third_party/bootstrapt3/js/bootstrap.min.js"></script>
+    </body>
 </html>
 {% endautoescape %}
