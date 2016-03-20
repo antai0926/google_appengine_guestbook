@@ -4,6 +4,7 @@ import urllib
 
 from google.appengine.api import users
 from google.appengine.ext import ndb
+import modle
 
 import jinja2
 import webapp2
@@ -30,27 +31,14 @@ def guestbook_key(guestbook_name=DEFAULT_GUESTBOOK_NAME):
     return ndb.Key('Guestbook', guestbook_name)
 
 
-class Author(ndb.Model):
-    """Sub model for representing an author."""
-    identity = ndb.StringProperty(indexed=False)
-    email = ndb.StringProperty(indexed=False)
-
-
-class Greeting(ndb.Model):
-    """A main model for representing an individual Guestbook entry."""
-    author = ndb.StructuredProperty(Author)
-    content = ndb.StringProperty(indexed=False)
-    date = ndb.DateTimeProperty(auto_now_add=True)
-
-
 # [START main_page]
 class MainPage(webapp2.RequestHandler):
 
     def get(self):
         guestbook_name = self.request.get('guestbook_name',
                                           DEFAULT_GUESTBOOK_NAME)
-        greetings_query = Greeting.query(
-            ancestor=guestbook_key(guestbook_name)).order(-Greeting.date)
+        greetings_query = modle.Greeting.query(
+            ancestor=guestbook_key(guestbook_name)).order(-modle.Greeting.date)
         greetings = greetings_query.fetch(10)
 
         user = users.get_current_user()
@@ -69,7 +57,7 @@ class MainPage(webapp2.RequestHandler):
             'url_linktext': url_linktext,
         }
 
-        template = JINJA_ENVIRONMENT.get_template('index.html')
+        template = JINJA_ENVIRONMENT.get_template('/template/index.html')
         self.response.write(template.render(template_values))
 # [END main_page]
 
@@ -84,10 +72,10 @@ class Guestbook(webapp2.RequestHandler):
         # ~1/second.
         guestbook_name = self.request.get('guestbook_name',
                                           DEFAULT_GUESTBOOK_NAME)
-        greeting = Greeting(parent=guestbook_key(guestbook_name))
+        greeting = modle.Greeting(parent=guestbook_key(guestbook_name))
 
         if users.get_current_user():
-            greeting.author = Author(
+            greeting.author = modle.Author(
                     identity=users.get_current_user().user_id(),
                     email=users.get_current_user().email())
 
@@ -98,7 +86,3 @@ class Guestbook(webapp2.RequestHandler):
         self.redirect('/?' + urllib.urlencode(query_params))
 
 
-app = webapp2.WSGIApplication([
-    ('/', MainPage),
-    ('/sign', Guestbook),
-], debug=True)
