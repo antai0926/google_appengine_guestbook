@@ -4,6 +4,7 @@
   <!-- [START head_html] -->
   <head>
     <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
+    <!--<script src="/third_party/jquery/jquery-2.2.2.min.js"></script>-->
   </head>
   <!-- [END head_html] -->
   <body>
@@ -34,20 +35,10 @@
 
     <a href="{{ url|safe }}">{{ url_linktext }}</a>
     <!--
+    <div id="divtest" value="s"></div>
     <script>
-        if(typeof(EventSource) !== "undefined") {
-            var source = new EventSource("/");
-            source.onmessage = function(event) {
-                //document.getElementById("result").innerHTML += event.data + "<br>";
-               // window.location.reload();
-               alert("123");
-            };
-        } else {
-           alert("not support");
-           // document.getElementById("result").innerHTML = "Sorry, your browser does not support server-sent events...";
-        }
-    </script>
-    -->
+      alert($('#divtest').value());
+    </script>-->
 
   </body>
 </html>
