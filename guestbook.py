@@ -2,13 +2,12 @@
 import os
 import urllib
 
-from google.appengine.api import users
-from google.appengine.ext import ndb
-import modle
-
 import jinja2
 import webapp2
+from google.appengine.api import users
+from google.appengine.ext import ndb
 
+from models import Author_modle, Greeting_modle
 
 JINJA_ENVIRONMENT = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
@@ -37,8 +36,8 @@ class MainPage(webapp2.RequestHandler):
     def get(self):
         guestbook_name = self.request.get('guestbook_name',
                                           DEFAULT_GUESTBOOK_NAME)
-        greetings_query = modle.Greeting.query(
-            ancestor=guestbook_key(guestbook_name)).order(-modle.Greeting.date)
+        greetings_query = Greeting_modle.Greeting.query(
+            ancestor=guestbook_key(guestbook_name)).order(-Greeting_modle.Greeting.date)
         greetings = greetings_query.fetch(10)
 
         user = users.get_current_user()
@@ -72,15 +71,15 @@ class Guestbook(webapp2.RequestHandler):
         # ~1/second.
         guestbook_name = self.request.get('guestbook_name',
                                           DEFAULT_GUESTBOOK_NAME)
-        greeting = modle.Greeting(parent=guestbook_key(guestbook_name))
+        parent = guestbook_key(guestbook_name)
 
+        author_key = None
         if users.get_current_user():
-            greeting.author = modle.Author(
-                    identity=users.get_current_user().user_id(),
-                    email=users.get_current_user().email())
-
-        greeting.content = self.request.get('content')
-        greeting.put()
+            identity = users.get_current_user().user_id()
+            email = users.get_current_user().email()
+            author_key = Author_modle.save_author(identity=identity, email=email)
+        content = self.request.get('content')
+        Greeting_modle.save_greeting(parent=parent, author=author_key, content=content)
 
         query_params = {'guestbook_name': guestbook_name}
         self.redirect('/?' + urllib.urlencode(query_params))
