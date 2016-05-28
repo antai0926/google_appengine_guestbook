@@ -10,9 +10,9 @@ class Author(ndb.Model):
 
 def save_author(identity, email):
     author = Author(identity=identity, email=email)
-    author_key = author.put()
+    author.put()
     # return key if another kind's property need to save this
-    return author_key
+    return author
 
 
 
