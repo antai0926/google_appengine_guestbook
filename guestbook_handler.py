@@ -1,11 +1,12 @@
 # [START imports]
-import os
-import urllib
 
-import jinja2
-import webapp2
 from google.appengine.api import users
 from google.appengine.ext import ndb
+
+import os
+import urllib
+import jinja2
+import webapp2
 
 from models import Author_modle, Greeting_modle
 
