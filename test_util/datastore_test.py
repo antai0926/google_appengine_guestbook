@@ -14,6 +14,9 @@
 
 # [START imports]
 import unittest
+import sys
+sys.path.insert(1, '/usr/local/google_appengine')
+sys.path.insert(1, '/usr/local/google_appengine/lib/yaml/lib')
 
 from google.appengine.api import memcache
 from google.appengine.ext import ndb
