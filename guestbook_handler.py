@@ -9,6 +9,7 @@ import jinja2
 import webapp2
 
 from models import Author_modle, Greeting_modle
+from login import login
 
 JINJA_ENVIRONMENT = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
@@ -55,9 +56,12 @@ class MainPage(webapp2.RequestHandler):
             'guestbook_name': urllib.quote_plus(guestbook_name),
             'url': url,
             'url_linktext': url_linktext,
+            'is_can_see': login.is_can_see()
         }
-
-        template = JINJA_ENVIRONMENT.get_template('/template/guestbook.html')
+        if login.is_can_see():
+            template = JINJA_ENVIRONMENT.get_template('/template/guestbook.html')
+        else:
+            template = JINJA_ENVIRONMENT.get_template('/template/login.html')
         self.response.write(template.render(template_values))
 # [END main_page]
 
