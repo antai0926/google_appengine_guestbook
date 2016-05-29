@@ -8,7 +8,7 @@ import urllib
 import jinja2
 import webapp2
 
-from models import Author_modle, Greeting_modle
+from models import Author_modle, Message_modle
 from login import login
 
 JINJA_ENVIRONMENT = jinja2.Environment(
@@ -38,9 +38,9 @@ class MainPage(webapp2.RequestHandler):
     def get(self):
         guestbook_name = self.request.get('guestbook_name',
                                           DEFAULT_GUESTBOOK_NAME)
-        greetings_query = Greeting_modle.Greeting.query(
-            ancestor=guestbook_key(guestbook_name)).order(-Greeting_modle.Greeting.date)
-        greetings = greetings_query.fetch(10)
+        messages_query = Message_modle.Message.query(
+            ancestor=guestbook_key(guestbook_name)).order(-Message_modle.Message.date)
+        messages = messages_query.fetch(10)
 
         user = users.get_current_user()
         if user:
@@ -52,7 +52,7 @@ class MainPage(webapp2.RequestHandler):
 
         template_values = {
             'user': user,
-            'greetings': greetings,
+            'messages': messages,
             'guestbook_name': urllib.quote_plus(guestbook_name),
             'url': url,
             'url_linktext': url_linktext,
@@ -84,7 +84,7 @@ class Guestbook(webapp2.RequestHandler):
             email = users.get_current_user().email()
             author_key = Author_modle.save_author(identity=identity, email=email)
         content = self.request.get('content')
-        Greeting_modle.save_greeting(parent=parent, author=author_key, content=content)
+        Message_modle.save_message(parent=parent, author=author_key, content=content)
 
         query_params = {'guestbook_name': guestbook_name}
         self.redirect('/?' + urllib.urlencode(query_params))

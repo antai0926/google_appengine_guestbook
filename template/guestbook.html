@@ -9,24 +9,24 @@
     <!-- [END head_html] -->
     <body>
         <div class="alert alert-success" role="alert"><h3>熊熊豬豬留言板</h3></div>
-        {% for greeting in greetings %}
-            {% if greeting.author %}
+        {% for message in messages %}
+            {% if message.author %}
                 <b>
-                {% if user and user.user_id() == greeting.author.identity %}
+                {% if user and user.user_id() == message.author.identity %}
                     <div class="alert alert-danger" role="alert">
-                        <b>{{ greeting.author.email }}(You)</b>
-                         <br/>wrote: {{ greeting.content }}
+                        <b>{{ message.author.email }}(You)</b>
+                         <br/>wrote: {{ message.content }}
                     </div>
                 {% else %}
                     <div class="alert alert-info" role="alert">
-                        <b>{{ greeting.author.email }}</b>
-                         <br/>wrote: {{ greeting.content }}
+                        <b>{{ message.author.email }}</b>
+                         <br/>wrote: {{ message.content }}
                     </div>
                 {% endif %}
             {% else %}
                  <div class="alert alert-info" role="alert">
                      <b>An anonymous person</b>
-                     <br/>wrote: {{ greeting.content }}
+                     <br/>wrote: {{ message.content }}
                  </div>
             {% endif %}
         {% endfor %}
